@@ -57,7 +57,7 @@ http.createServer((req, res) => {
             var username = u.username;
             var password = u.password;
             // console.log(username,password);
-            var i = 0;  
+            var i = 0;
             for (i = 0; i < userList.length; i++) {
                 if (userList[i].username == username && userList[i].pwd == password) {
                     data = 1;
@@ -97,6 +97,22 @@ http.createServer((req, res) => {
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(data));
         });
+    }
+    else if (urlObj.pathname == "/delChapter") {
+        var chapterId = queryString.parse(urlObj.query).chapterId;
+        console.log(urlObj.query);
+        for (var i = 0; i < chapterList.length; i++) {
+            if (chapterList[i].chapterId == chapterId) {
+                chapterList.splice(i, 1);
+                data = 1;
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(data));
+                return;
+            }
+        }
+        data = 0;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(data));
     }
     else {
         var htmlPath = path.join(__dirname, "素材", urlObj.pathname);

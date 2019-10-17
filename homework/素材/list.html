@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             margin: 0;
             padding: 0;
         }
+
         /* body {
             background: url(./bg.jpg) repeat;
         } */
@@ -22,18 +24,23 @@
             display: block;
             margin-top: 100px;
         }
-        table td, table th {
+
+        table td,
+        table th {
             border: 1px solid #cad9ea;
             color: #666;
             height: 45px;
         }
+
         table thead th {
             background-color: #CCE8EB;
             width: 220px;
         }
+
         table tr:nth-child(odd) {
             background: #fff;
         }
+
         table tr:nth-child(even) {
             background: #F5FAFA;
         }
@@ -41,32 +48,39 @@
         .container {
             margin-top: 60px;
         }
+
         .left {
-            background-color:#d0daf3;
+            background-color: #d0daf3;
             position: fixed;
             top: 60px;
             bottom: 0;
-            width: 250px; 
+            width: 250px;
         }
+
         .left li {
             text-align: center;
             height: 60px;
             line-height: 60px;
             font-size: 15px;
         }
+
         .left li:nth-child(1) {
             background-color: #eee;
         }
+
         .left li:hover {
-            background-color:#eee;
+            background-color: #eee;
         }
+
         .left a {
-            color:black;
+            color: black;
             text-decoration: none;
         }
+
         .right {
             margin-left: 250px;
         }
+
         nav {
             width: 100%;
             min-width: 960px;
@@ -75,14 +89,15 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index:200;
+            z-index: 200;
             color: white;
             text-align: center;
             line-height: 60px;
             font-size: 20px;
         }
-    </style> 
+    </style>
 </head>
+
 <body>
     <nav></nav>
     <div class="container">
@@ -97,123 +112,54 @@
             </ul>
         </div>
         <div class="right">
-                <table  class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    编号
-                                </th>
-                                <th>
-                                    文章名称    
-                                </th>
-                                <th>
-                                    文章点击量
-                                </th>
-                                <th>
-                                    操作
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="result"></tbody>
-
-
-
-
-                        <tr>
-                            <td>
-                                109
-                            </td>
-                            <td>
-                                13
-                            </td>
-                            <td>
-                                1.34
-                            </td>
-                            <td>
-                                213
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                109
-                            </td>
-                            <td>
-                                13
-                            </td>
-                            <td>
-                                1.34
-                            </td>
-                            <td>
-                                213
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                109
-                            </td>
-                                    <td>
-                                        13
-                                    </td>
-                                    <td>
-                                        1.34
-                                    </td>
-                                    <td>
-                                        213
-                                    </td>
-                        </tr>
-                        <tr>
-                                    <td>
-                                        109
-                                    </td>
-                                    <td>
-                                        13
-                                    </td>
-                                    <td>
-                                        1.34
-                                    </td>
-                                    <td>
-                                        213
-                                    </td>
-                        </tr>
-                        <tr>
-                                    <td>
-                                        109
-                                    </td>
-                                    <td>
-                                        13
-                                    </td>
-                                    <td>
-                                        1.34
-                                    </td>
-                                    <td>
-                                        213
-                                    </td>
-                        </tr>
-                        <tr>
-                                    <td>
-                                        109
-                                    </td>
-                                    <td>
-                                        13
-                                    </td>
-                                    <td>
-                                        1.34
-                                    </td>
-                                    <td>
-                                        213
-                                    </td>
-                        </tr>
-                    </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            编号
+                        </th>
+                        <th>
+                            文章名称
+                        </th>
+                        <th>
+                            文章点击量
+                        </th>
+                        <th>
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="result"></tbody>
+            </table>
         </div>
     </div>
-    
-        
 </body>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script>
     function addChapter() {
         window.location = "http://localhost:8083/addChapter"
     }
+    $.get('/getChapterList', (data) => {
+        var dataList = JSON.parse(data);
+        dataList.forEach((data, index) => {
+            var list = `<tr>
+                            <td>${data.chapterId}</td>
+                            <td>${data.chapterName}</td>
+                            <td>${data.views}</td>
+                            <td><button class='btn'>删除</button></td>
+                        </tr>`;
+            $("#result").append(list);
+        })
+    });
+    $("#result").on("click", ".btn", function(){
+        var chapterId = $(this).parent().parent().children("td")[0].innerHTML;
+        $.get('/delChapter?chapterId=' + chapterId, (data) => {
+            data = JSON.parse(JSON.stringify(data));
+            if (data == 1) {
+                $(this).parent().parent().remove();
+            }
+        });
+    })
 </script>
+
 </html>
